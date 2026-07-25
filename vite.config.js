@@ -21,6 +21,17 @@ export default defineConfig({
     __BUILD_TIME__: JSON.stringify(getBuildTime())
   },
   build: {
-    outDir: 'dist'
+    outDir: 'dist',
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('firebase')) return 'firebase';
+            if (id.includes('react')) return 'vendor';
+          }
+        }
+      }
+    }
   }
 });
