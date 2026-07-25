@@ -259,12 +259,20 @@ export const subscribeUserPolls = (userId, callback) => {
 
   const q = query(
     collection(db, 'polls'), 
-    where('creatorId', '==', userId), 
-    orderBy('createdAt', 'desc')
+    where('creatorId', '==', userId)
   );
   return onSnapshot(q, (snapshot) => {
     const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    // Sort in memory to avoid requiring Firestore composite index
+    list.sort((a, b) => {
+      const timeA = a.createdAt?.seconds ? a.createdAt.seconds * 1000 : new Date(a.createdAt || 0).getTime();
+      const timeB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : new Date(b.createdAt || 0).getTime();
+      return timeB - timeA;
+    });
     callback(list);
+  }, (err) => {
+    console.error("subscribeUserPolls error:", err);
+    callback([]);
   });
 };
 

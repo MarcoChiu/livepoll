@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Eye, Lock, ArrowLeft, CheckCircle2, AlertCircle, Share2, Edit3 } from 'lucide-react';
+import { Clock, Eye, Lock, ArrowLeft, CheckCircle2, AlertCircle, Share2, Edit3, Trash2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { subscribePoll, submitVote } from '../config/firebase';
+import { subscribePoll, submitVote, deletePollDoc } from '../config/firebase';
 import { getVoterDeviceId, hasVotedLocally, recordLocalVote } from '../utils/voterId';
 import PollResults from './PollResults';
 
@@ -118,6 +118,17 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
 
   const canViewResults = hasVoted || isClosedOrExpired || poll.showResultsBeforeVote;
 
+  const handleDeletePoll = async () => {
+    if (confirm('確定要刪除此投票嗎？此動作將無法復原。')) {
+      try {
+        await deletePollDoc(pollId);
+        onBack();
+      } catch (err) {
+        alert('刪除失敗: ' + err.message);
+      }
+    }
+  };
+
   return (
     <div className="poll-detail-container">
       {/* Top Bar */}
@@ -128,11 +139,19 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
         </button>
 
         <div style={{ display: 'flex', gap: '8px' }}>
-          {currentUser && poll && currentUser.uid === poll.creatorId && onEditPoll && (
-            <button className="btn btn-outline" onClick={() => onEditPoll(poll)}>
-              <Edit3 size={16} color="var(--primary)" />
-              <span>修改</span>
-            </button>
+          {currentUser && poll && currentUser.uid === poll.creatorId && (
+            <>
+              {onEditPoll && (
+                <button className="btn btn-outline" onClick={() => onEditPoll(poll)}>
+                  <Edit3 size={16} color="var(--primary)" />
+                  <span>修改</span>
+                </button>
+              )}
+              <button className="btn btn-danger" onClick={handleDeletePoll} title="刪除投票">
+                <Trash2 size={16} />
+                <span>刪除</span>
+              </button>
+            </>
           )}
 
           <button className="btn btn-outline" onClick={() => onShare(poll)}>
