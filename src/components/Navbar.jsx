@@ -18,10 +18,10 @@ export default function Navbar({ currentUser, onCreateClick, onMyPollsClick, onH
   return (
     <nav className="navbar">
       <div className="nav-brand" onClick={onHomeClick} style={{ cursor: 'pointer' }}>
-        <div className="nav-logo-icon" style={{ background: 'transparent', padding: 0 }}>
-          <img src="./logo.png" alt="Logo" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
+        <div className="nav-logo-icon" style={{ background: '#ffffff', borderRadius: '8px', padding: '2px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
+          <img src="./logo.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '6px' }} />
         </div>
-        <span>Live Poll</span>
+        <span>線上即時投票系統</span>
       </div>
 
       <div className="nav-actions">
