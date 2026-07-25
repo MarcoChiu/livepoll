@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Eye, Lock, ArrowLeft, CheckCircle2, AlertCircle, Share2 } from 'lucide-react';
+import { Clock, Eye, Lock, ArrowLeft, CheckCircle2, AlertCircle, Share2, Edit3 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { subscribePoll, submitVote } from '../config/firebase';
 import { getVoterDeviceId, hasVotedLocally, recordLocalVote } from '../utils/voterId';
 import PollResults from './PollResults';
 
-export default function PollVoteView({ pollId, onBack, onShare }) {
+export default function PollVoteView({ pollId, currentUser, onBack, onShare, onEditPoll }) {
   const [poll, setPoll] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -128,6 +128,13 @@ export default function PollVoteView({ pollId, onBack, onShare }) {
         </button>
 
         <div style={{ display: 'flex', gap: '8px' }}>
+          {currentUser && poll && currentUser.uid === poll.creatorId && onEditPoll && (
+            <button className="btn btn-outline" onClick={() => onEditPoll(poll)}>
+              <Edit3 size={16} color="var(--primary)" />
+              <span>修改</span>
+            </button>
+          )}
+
           <button className="btn btn-outline" onClick={() => onShare(poll)}>
             <Share2 size={16} />
             <span>分享</span>

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Users, Clock, Share2, Trash2, CheckCircle2, Lock } from 'lucide-react';
+import { Users, Clock, Share2, Trash2, CheckCircle2, Lock, Edit3 } from 'lucide-react';
 
-export default function PollCard({ poll, onSelect, onShare, onDelete, onClosePoll, isOwner }) {
+export default function PollCard({ poll, onSelect, onShare, onDelete, onClosePoll, onEditPoll, isOwner }) {
   const isExpired = poll.isClosed || (poll.hasTimeLimit && poll.expiresAt && new Date() > new Date(poll.expiresAt));
   const badgeText = poll.isClosed ? '已截止' : (isExpired ? '已截止' : '進行中');
 
@@ -48,6 +48,20 @@ export default function PollCard({ poll, onSelect, onShare, onDelete, onClosePol
             >
               <Share2 size={15} />
             </button>
+
+            {isOwner && onEditPoll && (
+              <button
+                className="btn btn-outline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEditPoll(poll);
+                }}
+                style={{ padding: '6px', color: 'var(--primary)' }}
+                title="修改投票選項與內容"
+              >
+                <Edit3 size={15} />
+              </button>
+            )}
 
             {isOwner && !isExpired && (
               <button

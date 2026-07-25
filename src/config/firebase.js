@@ -297,3 +297,20 @@ export const closePollDoc = async (pollId) => {
   });
 };
 
+// 7. 編輯/更新投票內容
+export const updatePollDoc = async (pollId, updatedData) => {
+  if (isMockMode) {
+    const polls = getMockPolls();
+    if (polls[pollId]) {
+      polls[pollId] = {
+        ...polls[pollId],
+        ...updatedData
+      };
+      saveMockPolls(polls);
+    }
+    return;
+  }
+  const pollRef = doc(db, 'polls', pollId);
+  await updateDoc(pollRef, updatedData);
+};
+

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import CreatePollModal from './components/CreatePollModal';
+import EditPollModal from './components/EditPollModal';
 import PollVoteView from './components/PollVoteView';
 import ShareModal from './components/ShareModal';
 import MyPollsView from './components/MyPollsView';
@@ -14,6 +15,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('home'); // 'home' | 'mypolls' | 'vote'
   const [selectedPollId, setSelectedPollId] = useState(null);
   const [sharePollData, setSharePollData] = useState(null);
+  const [editingPollData, setEditingPollData] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [demoPolls, setDemoPolls] = useState([]);
 
@@ -107,8 +109,10 @@ export default function App() {
         {activeTab === 'vote' && selectedPollId && (
           <PollVoteView
             pollId={selectedPollId}
+            currentUser={currentUser}
             onBack={handleBackToHome}
             onShare={(poll) => setSharePollData(poll)}
+            onEditPoll={(poll) => setEditingPollData(poll)}
           />
         )}
 
@@ -118,6 +122,7 @@ export default function App() {
             onBack={handleBackToHome}
             onSelectPoll={handleSelectPoll}
             onSharePoll={(poll) => setSharePollData(poll)}
+            onEditPoll={(poll) => setEditingPollData(poll)}
             onCreateClick={() => setShowCreateModal(true)}
           />
         )}
@@ -193,6 +198,7 @@ export default function App() {
                       poll={poll}
                       onSelect={handleSelectPoll}
                       onShare={(pollData) => setSharePollData(pollData)}
+                      onEditPoll={(pollData) => setEditingPollData(pollData)}
                       onDelete={async (pollId) => {
                         if (confirm('確定刪除示範投票？')) {
                           await deletePollDoc(pollId);
@@ -219,6 +225,14 @@ export default function App() {
           currentUser={currentUser}
           onClose={() => setShowCreateModal(false)}
           onSuccess={handlePollCreatedSuccess}
+        />
+      )}
+
+      {editingPollData && (
+        <EditPollModal
+          poll={editingPollData}
+          onClose={() => setEditingPollData(null)}
+          onSuccess={() => setEditingPollData(null)}
         />
       )}
 

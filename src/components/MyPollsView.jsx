@@ -3,7 +3,7 @@ import { PlusCircle, List, ArrowLeft } from 'lucide-react';
 import { subscribeUserPolls, deletePollDoc, closePollDoc } from '../config/firebase';
 import PollCard from './PollCard';
 
-export default function MyPollsView({ currentUser, onSelectPoll, onSharePoll, onCreateClick, onBack }) {
+export default function MyPollsView({ currentUser, onSelectPoll, onSharePoll, onCreateClick, onEditPoll, onBack }) {
   const [polls, setPolls] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -78,6 +78,7 @@ export default function MyPollsView({ currentUser, onSelectPoll, onSharePoll, on
               onShare={onSharePoll}
               onDelete={handleDelete}
               onClosePoll={handleClose}
+              onEditPoll={onEditPoll}
               isOwner={true}
             />
           ))}
