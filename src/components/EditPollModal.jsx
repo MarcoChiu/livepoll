@@ -76,8 +76,8 @@ export default function EditPollModal({ poll, onClose, onSuccess }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay">
+      <div className="modal-content">
         <div className="modal-header">
           <div className="nav-brand" style={{ fontSize: '1.2rem' }}>
             <Edit3 size={20} color="var(--primary)" />

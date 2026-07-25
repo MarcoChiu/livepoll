@@ -36,8 +36,8 @@ export default function ShareModal({ poll, onClose }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ textAlign: 'center' }}>
+    <div className="modal-overlay">
+      <div className="modal-content" style={{ textAlign: 'center' }}>
         <div className="modal-header">
           <div className="nav-brand" style={{ fontSize: '1.2rem' }}>
             <Share2 size={20} color="var(--primary)" />
