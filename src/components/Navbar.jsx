@@ -18,8 +18,8 @@ export default function Navbar({ currentUser, onCreateClick, onMyPollsClick, onH
   return (
     <nav className="navbar">
       <div className="nav-brand" onClick={onHomeClick} style={{ cursor: 'pointer' }}>
-        <div className="nav-logo-icon">
-          <Vote size={22} />
+        <div className="nav-logo-icon" style={{ background: 'transparent', padding: 0 }}>
+          <img src="./logo.png" alt="Logo" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
         </div>
         <span>Live Poll</span>
       </div>
