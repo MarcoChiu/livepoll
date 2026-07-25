@@ -1,3 +1,4 @@
+/* global __BUILD_TIME__ */
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import CreatePollModal from './components/CreatePollModal';
@@ -15,6 +16,11 @@ export default function App() {
   const [sharePollData, setSharePollData] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [demoPolls, setDemoPolls] = useState([]);
+
+  // Set document title with build time (aligned with other projects)
+  useEffect(() => {
+    document.title = `線上即時投票系統 (${typeof __BUILD_TIME__ !== 'undefined' ? __BUILD_TIME__ : 'Dev'} build)`;
+  }, []);
 
   // Subscribe Auth
   useEffect(() => {
