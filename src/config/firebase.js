@@ -26,14 +26,14 @@ import {
 // 📌 FIREBASE 專案設定檔 (FIREBASE CONFIGURATION)
 // 請將從 Firebase Console (https://console.firebase.google.com/) 取得之設定貼入下方
 // ============================================================================
-// 優先讀取環境變數 (如 .env.local)，若無則讀取預設值
+// 優先讀取環境變數 (如 .env 或 .env.local)
 export const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDFTfI2Ebif68Srk6GGA4P5nRftSdYdhV8",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "livepoll-e6231.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "livepoll-e6231",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "livepoll-e6231.firebasestorage.app",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "232748350317",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:232748350317:web:25480854bc1ff75a28f864"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || ""
 };
 
 // 判斷是否已經填入真實的 Firebase API Key
