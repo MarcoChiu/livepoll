@@ -26,19 +26,21 @@ export default function Navbar({ currentUser, onCreateClick, onMyPollsClick, onH
 
       <div className="nav-actions">
         {currentUser && (
-          <button 
-            className={`btn ${activeTab === 'mypolls' ? 'btn-secondary' : 'btn-outline'}`}
-            onClick={onMyPollsClick}
-          >
-            <List size={18} />
-            <span>我的投票</span>
-          </button>
-        )}
+          <>
+            <button 
+              className={`btn ${activeTab === 'mypolls' ? 'btn-secondary' : 'btn-outline'}`}
+              onClick={onMyPollsClick}
+            >
+              <List size={18} />
+              <span>我的投票</span>
+            </button>
 
-        <button className="btn btn-primary" onClick={onCreateClick}>
-          <PlusCircle size={18} />
-          <span>發起投票</span>
-        </button>
+            <button className="btn btn-primary" onClick={onCreateClick}>
+              <PlusCircle size={18} />
+              <span>發起投票</span>
+            </button>
+          </>
+        )}
 
         {currentUser ? (
           <div className="user-profile">

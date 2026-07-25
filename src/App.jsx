@@ -5,8 +5,8 @@ import PollVoteView from './components/PollVoteView';
 import ShareModal from './components/ShareModal';
 import MyPollsView from './components/MyPollsView';
 import PollCard from './components/PollCard';
-import { subscribeAuth, isMockMode, subscribeUserPolls, deletePollDoc } from './config/firebase';
-import { Vote, Sparkles, ShieldCheck, Zap, AlertTriangle, ArrowRight } from 'lucide-react';
+import { subscribeAuth, isMockMode, subscribeUserPolls, deletePollDoc, loginWithGoogle } from './config/firebase';
+import { Vote, Sparkles, ShieldCheck, Zap, AlertTriangle, ArrowRight, LogIn } from 'lucide-react';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -130,11 +130,19 @@ export default function App() {
               </p>
 
               <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', flexWrap: 'wrap' }}>
-                <button className="btn btn-primary" onClick={() => setShowCreateModal(true)} style={{ padding: '12px 24px', fontSize: '1.05rem' }}>
-                  <Vote size={20} />
-                  <span>立即建立投票</span>
-                  <ArrowRight size={18} />
-                </button>
+                {currentUser ? (
+                  <button className="btn btn-primary" onClick={() => setShowCreateModal(true)} style={{ padding: '12px 24px', fontSize: '1.05rem' }}>
+                    <Vote size={20} />
+                    <span>立即建立投票</span>
+                    <ArrowRight size={18} />
+                  </button>
+                ) : (
+                  <button className="btn btn-primary" onClick={loginWithGoogle} style={{ padding: '12px 24px', fontSize: '1.05rem' }}>
+                    <LogIn size={20} />
+                    <span>Google 帳號登入發起投票</span>
+                    <ArrowRight size={18} />
+                  </button>
+                )}
               </div>
             </div>
 
