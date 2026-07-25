@@ -1,8 +1,6 @@
-<<<<<<< HEAD
-# livepoll
-線上即時投票系統
-=======
 # 🗳️ 線上即時投票系統 (Live Poll Web Application)
+
+> 🔗 **線上體驗網址**：[https://MarcoChiu.github.io/livepoll/](https://MarcoChiu.github.io/livepoll/)
 
 視覺效果精美、響應式 (Mobile-First) 且支援 **純前端即時同步 (Real-Time)** 的線上投票系統。
 
