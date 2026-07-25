@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 投票集合規則
+    match /polls/{pollId} {
+      // 任何參與者均可讀取投票內容與最新統計
+      allow read: if true;
+
+      // 發起投票人必須登入 Google 帳號
+      allow create: if request.auth != null;
+
+      // 更新權限：
+      // 1. 發起人可隨時更新或關閉投票
+      // 2. 投票參與者 (無須登入) 可透過原子化更新增加票數與寫入投票者 ID
+      allow update: if (request.auth != null && request.auth.uid == resource.data.creatorId)
+                   || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['options', 'totalVotes', 'voterIds']);
+
+      // 只有投票發起人可以刪除投票
+      allow delete: if request.auth != null && request.auth.uid == resource.data.creatorId;
+    }
+  }
+}
