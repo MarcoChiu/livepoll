@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Eye, Lock, ArrowLeft, CheckCircle2, AlertCircle, Share2, Edit3, Trash2 } from 'lucide-react';
+import { Clock, Eye, Lock, ArrowLeft, CheckCircle2, AlertCircle, Share2, Edit3, Trash2, ShieldCheck, LogIn } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { subscribePoll, submitVote, deletePollDoc } from '../config/firebase';
+import { subscribePoll, submitVote, deletePollDoc, loginWithGoogle } from '../config/firebase';
 import { getVoterDeviceId, hasVotedLocally, recordLocalVote } from '../utils/voterId';
 import PollResults from './PollResults';
 
@@ -57,6 +57,7 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
 
   const handleOptionToggle = (optionId) => {
     if (hasVoted || isClosedOrExpired) return;
+    if (poll.requireGoogleLogin && !currentUser) return;
 
     if (poll.allowMultiple) {
       if (selectedOptions.includes(optionId)) {
@@ -73,6 +74,12 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
   const handleVoteSubmit = async () => {
     if (selectedOptions.length === 0) {
       alert('請先選擇至少一個選項！');
+      return;
+    }
+
+    // Check Google login requirement
+    if (poll.requireGoogleLogin && !currentUser) {
+      alert('此投票需要登入 Google 帳號才能參與，請先登入。');
       return;
     }
 
@@ -174,11 +181,16 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
 
       {/* Header Info */}
       <div className="poll-detail-header">
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '10px', flexWrap: 'wrap' }}>
           <span className={`badge ${isClosedOrExpired ? 'badge-expired' : 'badge-active'}`}>
             {isClosedOrExpired ? '已截止' : '進行中'}
           </span>
           {poll.allowMultiple && <span className="badge badge-multi">可複選</span>}
+          {poll.requireGoogleLogin && (
+            <span className="badge" style={{ background: 'rgba(251, 191, 36, 0.18)', color: 'var(--warning)', border: '1px solid rgba(251, 191, 36, 0.4)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <ShieldCheck size={12} /> 需登入 Google
+            </span>
+          )}
         </div>
 
         <h1 className="poll-title-large">{poll.title}</h1>
@@ -213,6 +225,42 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
             </div>
           ) : null}
 
+          {/* Google Login Required Block */}
+          {poll.requireGoogleLogin && !currentUser && !hasVoted && !isClosedOrExpired && (
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(245, 158, 11, 0.08))',
+              border: '1px solid rgba(251, 191, 36, 0.35)',
+              padding: '20px 22px',
+              borderRadius: 'var(--radius-md)',
+              marginBottom: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '14px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--warning)' }}>
+                <ShieldCheck size={22} />
+                <span style={{ fontWeight: 600, fontSize: '1rem' }}>此投票需要登入 Google 帳號才能參與</span>
+              </div>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-sub)', margin: 0 }}>
+                發起人已啟用身份驗證，進行投票前請先登入您的 Google 帳號。
+              </p>
+              <button
+                className="btn btn-primary"
+                style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px' }}
+                onClick={async () => {
+                  try {
+                    await loginWithGoogle();
+                  } catch (err) {
+                    alert('登入失敗: ' + err.message);
+                  }
+                }}
+              >
+                <LogIn size={16} />
+                <span>登入 Google 帳號</span>
+              </button>
+            </div>
+          )}
+
           {!poll.showResultsBeforeVote && !hasVoted && (
             <div style={{ background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.25)', padding: '10px 14px', borderRadius: 'var(--radius-md)', marginBottom: '16px', fontSize: '0.88rem', color: 'var(--primary)' }}>
               🔒 發起人設定：未投票前隱藏統計，投完票後將自動解鎖即時票數結果。
@@ -235,7 +283,7 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
             })}
           </div>
 
-          {!hasVoted && !isExpired && (
+          {!hasVoted && !isExpired && !(poll.requireGoogleLogin && !currentUser) && (
             <button
               className="btn btn-primary"
               style={{ width: '100%', padding: '14px', fontSize: '1.05rem', marginTop: '12px' }}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Trash2, Edit3, CheckSquare, Eye } from 'lucide-react';
+import { X, Plus, Trash2, Edit3, CheckSquare, Eye, ShieldCheck } from 'lucide-react';
 import { updatePollDoc } from '../config/firebase';
 
 export default function EditPollModal({ poll, onClose, onSuccess }) {
@@ -8,6 +8,7 @@ export default function EditPollModal({ poll, onClose, onSuccess }) {
   const [options, setOptions] = useState(poll.options ? poll.options.map(o => o.text) : []);
   const [allowMultiple, setAllowMultiple] = useState(poll.allowMultiple || false);
   const [showResultsBeforeVote, setShowResultsBeforeVote] = useState(poll.showResultsBeforeVote !== false);
+  const [requireGoogleLogin, setRequireGoogleLogin] = useState(poll.requireGoogleLogin || false);
   const [loading, setLoading] = useState(false);
 
   const handleAddOption = () => {
@@ -63,7 +64,8 @@ export default function EditPollModal({ poll, onClose, onSuccess }) {
         description: description.trim(),
         options: updatedOptions,
         allowMultiple,
-        showResultsBeforeVote
+        showResultsBeforeVote,
+        requireGoogleLogin
       });
 
       if (onSuccess) onSuccess();
@@ -163,6 +165,16 @@ export default function EditPollModal({ poll, onClose, onSuccess }) {
               />
               <Eye size={18} color="var(--accent-cyan)" />
               <span>允許投票前觀看即時結果 (未勾選則需投完票才解鎖)</span>
+            </label>
+
+            <label className="checkbox-label" style={{ marginTop: '12px' }}>
+              <input
+                type="checkbox"
+                checked={requireGoogleLogin}
+                onChange={(e) => setRequireGoogleLogin(e.target.checked)}
+              />
+              <ShieldCheck size={18} color="var(--warning)" />
+              <span>必須登入 Google 帳號才能投票 (防止匿名灌票)</span>
             </label>
           </div>
 

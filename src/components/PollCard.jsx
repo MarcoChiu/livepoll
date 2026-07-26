@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Clock, Share2, Trash2, CheckCircle2, Lock, Edit3 } from 'lucide-react';
+import { Users, Clock, Share2, Trash2, CheckCircle2, Lock, Edit3, ShieldCheck } from 'lucide-react';
 
 export default function PollCard({ poll, onSelect, onShare, onDelete, onClosePoll, onEditPoll, isOwner }) {
   const isExpired = poll.isClosed || (poll.hasTimeLimit && poll.expiresAt && new Date() > new Date(poll.expiresAt));
@@ -33,6 +33,13 @@ export default function PollCard({ poll, onSelect, onShare, onDelete, onClosePol
             <div className="poll-meta-item" style={{ color: 'var(--accent-purple)' }}>
               <CheckCircle2 size={15} />
               <span>複選</span>
+            </div>
+          )}
+
+          {poll.requireGoogleLogin && (
+            <div className="poll-meta-item" style={{ color: 'var(--warning)' }}>
+              <ShieldCheck size={15} />
+              <span>需登入</span>
             </div>
           )}
 

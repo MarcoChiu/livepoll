@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Trash2, Clock, Eye, CheckSquare, Sparkles } from 'lucide-react';
+import { X, Plus, Trash2, Clock, Eye, CheckSquare, Sparkles, ShieldCheck } from 'lucide-react';
 import { createPollDoc, loginWithGoogle } from '../config/firebase';
 
 export default function CreatePollModal({ currentUser, onClose, onSuccess }) {
@@ -8,6 +8,7 @@ export default function CreatePollModal({ currentUser, onClose, onSuccess }) {
   const [options, setOptions] = useState(['選項一', '選項二']);
   const [allowMultiple, setAllowMultiple] = useState(false);
   const [showResultsBeforeVote, setShowResultsBeforeVote] = useState(true);
+  const [requireGoogleLogin, setRequireGoogleLogin] = useState(false);
   
   // Expiration settings
   const [timePreset, setTimePreset] = useState('none'); // 'none' | '10m' | '1h' | '24h' | 'custom'
@@ -93,6 +94,7 @@ export default function CreatePollModal({ currentUser, onClose, onSuccess }) {
         })),
         allowMultiple,
         showResultsBeforeVote,
+        requireGoogleLogin,
         hasTimeLimit,
         expiresAt,
         creatorId: currentUser.uid,
@@ -204,6 +206,16 @@ export default function CreatePollModal({ currentUser, onClose, onSuccess }) {
               />
               <Eye size={18} color="var(--accent-cyan)" />
               <span>允許投票前觀看即時結果 (未勾選則需投完票才解鎖)</span>
+            </label>
+
+            <label className="checkbox-label" style={{ marginTop: '12px' }}>
+              <input
+                type="checkbox"
+                checked={requireGoogleLogin}
+                onChange={(e) => setRequireGoogleLogin(e.target.checked)}
+              />
+              <ShieldCheck size={18} color="var(--warning)" />
+              <span>必須登入 Google 帳號才能投票 (防止匿名灌票)</span>
             </label>
           </div>
 
