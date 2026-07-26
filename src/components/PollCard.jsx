@@ -36,7 +36,7 @@ export default function PollCard({ poll, onSelect, onShare, onDelete, onClosePol
             </div>
           )}
 
-          <div style={{ marginLeft: 'auto', display: 'flex', gap: '6px' }}>
+          <div className="poll-card-actions">
             <button
               className="btn btn-outline"
               onClick={(e) => {

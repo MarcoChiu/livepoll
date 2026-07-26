@@ -237,7 +237,7 @@ export default function CreatePollModal({ currentUser, onClose, onSuccess }) {
             )}
           </div>
 
-          <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
+          <div className="modal-actions">
             <button type="button" className="btn btn-outline" onClick={onClose} style={{ flex: 1 }}>
               取消
             </button>

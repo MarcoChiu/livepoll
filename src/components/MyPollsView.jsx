@@ -39,13 +39,13 @@ export default function MyPollsView({ currentUser, onSelectPoll, onSharePoll, on
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <button className="btn btn-outline" onClick={onBack}>
+      <div className="page-header">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button className="btn btn-outline" onClick={onBack} title="返回首頁">
             <ArrowLeft size={16} />
           </button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.4rem', fontWeight: 800 }}>
-            <List size={24} color="var(--primary)" />
+          <div className="page-header-title">
+            <List size={22} color="var(--primary)" />
             <span>我發起的投票</span>
           </div>
         </div>

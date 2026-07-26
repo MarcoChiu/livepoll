@@ -132,40 +132,41 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
   return (
     <div className="poll-detail-container">
       {/* Top Bar */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <button className="btn btn-outline" onClick={onBack}>
+      <div className="poll-top-bar">
+        <button className="btn btn-outline" onClick={onBack} title="返回首頁">
           <ArrowLeft size={16} />
-          <span>返回</span>
+          <span className="btn-top-text">返回</span>
         </button>
 
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="poll-top-actions">
           {currentUser && poll && currentUser.uid === poll.creatorId && (
             <>
               {onEditPoll && (
-                <button className="btn btn-outline" onClick={() => onEditPoll(poll)}>
+                <button className="btn btn-outline" onClick={() => onEditPoll(poll)} title="修改投票">
                   <Edit3 size={16} color="var(--primary)" />
-                  <span>修改</span>
+                  <span className="btn-top-text">修改</span>
                 </button>
               )}
               <button className="btn btn-danger" onClick={handleDeletePoll} title="刪除投票">
                 <Trash2 size={16} />
-                <span>刪除</span>
+                <span className="btn-top-text">刪除</span>
               </button>
             </>
           )}
 
-          <button className="btn btn-outline" onClick={() => onShare(poll)}>
+          <button className="btn btn-outline" onClick={() => onShare(poll)} title="分享投票">
             <Share2 size={16} />
-            <span>分享</span>
+            <span className="btn-top-text">分享</span>
           </button>
 
           {canViewResults && !isClosedOrExpired && (
             <button
               className="btn btn-secondary"
               onClick={() => setShowResults(!showResults)}
+              title={showResults ? '返回投票' : '觀看結果'}
             >
               <Eye size={16} />
-              <span>{showResults ? '返回投票' : '觀看結果'}</span>
+              <span className="btn-top-text">{showResults ? '返回投票' : '觀看結果'}</span>
             </button>
           )}
         </div>

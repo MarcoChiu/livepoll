@@ -97,9 +97,11 @@ export default function App() {
       {/* Mock Mode Alert Banner */}
       {isMockMode && (
         <div className="mock-banner">
-          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <AlertTriangle size={18} />
-            <strong>離線/Mock 模式開啟中</strong>：您目前正使用內建體驗模式。欲啟用實際 Google 登入與線上雙向同步，請至 <code>src/config/firebase.js</code> 貼上您的 Firebase Config！
+          <span style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+            <AlertTriangle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
+            <span>
+              <strong>離線/Mock 模式開啟中</strong>：您目前正使用內建體驗模式。欲啟用實際 Google 登入與線上雙向同步，請至 <code>src/config/firebase.js</code> 貼上您的 Firebase Config！
+            </span>
           </span>
         </div>
       )}

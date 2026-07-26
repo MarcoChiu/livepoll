@@ -48,8 +48,8 @@ export default function PollResults({ poll, onShare }) {
         })}
       </div>
 
-      <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+      <div className="results-footer">
+        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'center' }}>
           <Sparkles size={14} color="var(--accent-cyan)" />
           票數即時更新中 (無須刷新)
         </span>

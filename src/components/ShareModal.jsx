@@ -69,7 +69,7 @@ export default function ShareModal({ poll, onClose }) {
         </div>
 
         {/* Copy Link Input & Button */}
-        <div className="form-group" style={{ display: 'flex', gap: '8px' }}>
+        <div className="share-input-group form-group">
           <input
             type="text"
             className="form-input"
