@@ -7,6 +7,7 @@ export default function CreatePollModal({ currentUser, onClose, onSuccess }) {
   const [description, setDescription] = useState('');
   const [options, setOptions] = useState(['選項一', '選項二']);
   const [allowMultiple, setAllowMultiple] = useState(false);
+  const [allowCustomOptions, setAllowCustomOptions] = useState(false);
   const [showResultsBeforeVote, setShowResultsBeforeVote] = useState(true);
   const [requireGoogleLogin, setRequireGoogleLogin] = useState(false);
   
@@ -93,6 +94,7 @@ export default function CreatePollModal({ currentUser, onClose, onSuccess }) {
           votes: 0
         })),
         allowMultiple,
+        allowCustomOptions,
         showResultsBeforeVote,
         requireGoogleLogin,
         hasTimeLimit,
@@ -196,6 +198,16 @@ export default function CreatePollModal({ currentUser, onClose, onSuccess }) {
               />
               <CheckSquare size={18} color="var(--accent-purple)" />
               <span>允許複選 (投票者可勾選多個選項)</span>
+            </label>
+
+            <label className="checkbox-label" style={{ marginBottom: '12px' }}>
+              <input
+                type="checkbox"
+                checked={allowCustomOptions}
+                onChange={(e) => setAllowCustomOptions(e.target.checked)}
+              />
+              <Plus size={18} color="var(--success)" />
+              <span>允許使用者自定義新增選項</span>
             </label>
 
             <label className="checkbox-label">

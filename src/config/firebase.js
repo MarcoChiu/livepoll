@@ -169,7 +169,7 @@ export const createPollDoc = async (pollData) => {
 };
 
 // 2. 進行投票 (原子化更新)
-export const submitVote = async (pollId, selectedOptionIds, voterFingerprint) => {
+export const submitVote = async (pollId, selectedOptionIds, voterFingerprint, customOptions = []) => {
   if (isMockMode) {
     const polls = getMockPolls();
     const poll = polls[pollId];
@@ -177,6 +177,12 @@ export const submitVote = async (pollId, selectedOptionIds, voterFingerprint) =>
 
     if (poll.voterIds && poll.voterIds.includes(voterFingerprint)) {
       throw new Error('您已經在此投票中投過票了！');
+    }
+
+    if (customOptions && customOptions.length > 0) {
+      customOptions.forEach(cOpt => {
+        poll.options.push({ id: cOpt.id, text: cOpt.text, votes: 0 });
+      });
     }
 
     poll.options = poll.options.map(opt => {
@@ -204,7 +210,14 @@ export const submitVote = async (pollId, selectedOptionIds, voterFingerprint) =>
       throw new Error("您已經參與過此項投票！");
     }
 
-    const updatedOptions = data.options.map(opt => {
+    let currentOptions = [...(data.options || [])];
+    if (customOptions && customOptions.length > 0) {
+      customOptions.forEach(cOpt => {
+        currentOptions.push({ id: cOpt.id, text: cOpt.text, votes: 0 });
+      });
+    }
+
+    const updatedOptions = currentOptions.map(opt => {
       if (selectedOptionIds.includes(opt.id)) {
         return { ...opt, votes: (opt.votes || 0) + 1 };
       }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Eye, Lock, ArrowLeft, CheckCircle2, AlertCircle, Share2, Edit3, Trash2, ShieldCheck, LogIn } from 'lucide-react';
+import { Clock, Eye, Lock, ArrowLeft, CheckCircle2, AlertCircle, Share2, Edit3, Trash2, ShieldCheck, LogIn, Plus } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { subscribePoll, submitVote, deletePollDoc, loginWithGoogle } from '../config/firebase';
 import { getVoterDeviceId, hasVotedLocally, recordLocalVote } from '../utils/voterId';
@@ -13,6 +13,8 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
   const [showResults, setShowResults] = useState(false);
   const [timeLeftStr, setTimeLeftStr] = useState('');
   const [isExpired, setIsExpired] = useState(false);
+  const [customAddedOptions, setCustomAddedOptions] = useState([]);
+  const [customOptionText, setCustomOptionText] = useState('');
 
   const voterFingerprint = getVoterDeviceId();
 
@@ -59,6 +61,11 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
     if (hasVoted || isClosedOrExpired) return;
     if (poll.requireGoogleLogin && !currentUser) return;
 
+    if (customAddedOptions.length > 0 && !customAddedOptions.find(o => o.id === optionId)) {
+      alert("您已新增自定義選項，只能投給您自定義的選項！");
+      return;
+    }
+
     if (poll.allowMultiple) {
       if (selectedOptions.includes(optionId)) {
         setSelectedOptions(selectedOptions.filter(id => id !== optionId));
@@ -68,6 +75,37 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
     } else {
       setSelectedOptions([optionId]);
     }
+  };
+
+  const handleAddCustomOption = () => {
+    if (!customOptionText.trim()) return;
+    
+    if (poll.requireGoogleLogin && !currentUser) {
+      alert('新增選項需要登入 Google 帳號，請先登入。');
+      return;
+    }
+
+    if (customAddedOptions.length > 0 && !poll.allowMultiple) {
+      alert('此投票為單選，您只能新增一個選項！');
+      return;
+    }
+
+    const newOpt = {
+      id: 'custom-' + Date.now(),
+      text: customOptionText.trim()
+    };
+    
+    setCustomAddedOptions([...customAddedOptions, newOpt]);
+    
+    if (!poll.allowMultiple) {
+      setSelectedOptions([newOpt.id]);
+    } else {
+      setSelectedOptions([...selectedOptions, newOpt.id].filter(id => {
+         return customAddedOptions.find(o => o.id === id) || id === newOpt.id;
+      }));
+    }
+    
+    setCustomOptionText('');
   };
 
   // Vote Submission
@@ -85,7 +123,7 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
 
     setIsSubmitting(true);
     try {
-      await submitVote(pollId, selectedOptions, voterFingerprint);
+      await submitVote(pollId, selectedOptions, voterFingerprint, customAddedOptions);
       recordLocalVote(pollId, selectedOptions);
 
       // Trigger Confetti Celebration
@@ -270,18 +308,51 @@ export default function PollVoteView({ pollId, currentUser, onBack, onShare, onE
           <div className="voting-options-list">
             {poll.options.map((opt) => {
               const isSelected = selectedOptions.includes(opt.id);
+              const isDisabled = customAddedOptions.length > 0;
               return (
                 <div
                   key={opt.id}
                   className={`voting-option-card ${isSelected ? 'selected' : ''}`}
                   onClick={() => handleOptionToggle(opt.id)}
+                  style={{ opacity: isDisabled ? 0.5 : 1, cursor: isDisabled ? 'not-allowed' : 'pointer' }}
                 >
                   <span className="option-text">{opt.text}</span>
                   <div style={{ width: '22px', height: '22px', borderRadius: poll.allowMultiple ? '6px' : '50%', border: isSelected ? '6px solid var(--primary)' : '2px solid var(--border-color)', background: isSelected ? '#fff' : 'transparent', transition: 'all 0.15s ease' }} />
                 </div>
               );
             })}
+            
+            {customAddedOptions.map((opt) => {
+              const isSelected = selectedOptions.includes(opt.id);
+              return (
+                <div
+                  key={opt.id}
+                  className={`voting-option-card ${isSelected ? 'selected' : ''}`}
+                  onClick={() => handleOptionToggle(opt.id)}
+                >
+                  <span className="option-text">{opt.text} <span style={{fontSize: '0.8rem', color: 'var(--success)', marginLeft: '6px'}}>(您新增的選項)</span></span>
+                  <div style={{ width: '22px', height: '22px', borderRadius: poll.allowMultiple ? '6px' : '50%', border: isSelected ? '6px solid var(--primary)' : '2px solid var(--border-color)', background: isSelected ? '#fff' : 'transparent', transition: 'all 0.15s ease' }} />
+                </div>
+              );
+            })}
           </div>
+
+          {!hasVoted && !isClosedOrExpired && poll.allowCustomOptions && (
+            <div style={{ marginTop: '16px', display: 'flex', gap: '8px' }}>
+              <input 
+                type="text" 
+                className="form-input" 
+                placeholder="輸入並新增自定義選項..." 
+                value={customOptionText}
+                onChange={(e) => setCustomOptionText(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAddCustomOption()}
+                style={{ flex: 1 }}
+              />
+              <button type="button" className="btn btn-outline" onClick={handleAddCustomOption}>
+                <Plus size={16} /> 新增
+              </button>
+            </div>
+          )}
 
           {!hasVoted && !isExpired && !(poll.requireGoogleLogin && !currentUser) && (
             <button
