@@ -21,7 +21,7 @@ export default function App() {
 
   // Set document title with build time (aligned with other projects)
   useEffect(() => {
-    document.title = `線上即時投票系統 (${typeof __BUILD_TIME__ !== 'undefined' ? __BUILD_TIME__ : 'Dev'} build)`;
+    document.title = `線上即時投票系統`;
   }, []);
 
   // Subscribe Auth
@@ -219,6 +219,7 @@ export default function App() {
       {/* Footer */}
       <footer style={{ marginTop: 'auto', paddingTop: '32px', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
         <p>Live Poll Web Application • Powered by React & Firebase</p>
+        <p>Build Time: {typeof __BUILD_TIME__ !== 'undefined' ? __BUILD_TIME__ : 'Dev'} build</p>
       </footer>
 
       {/* Modals */}
