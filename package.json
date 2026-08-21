@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "lint": "eslint src",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "postdeploy": "node postdeploy.js"
@@ -20,10 +21,15 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.0.3",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "gh-pages": "^6.3.0",
+    "globals": "^17.11.0",
     "vite": "^8.1.1"
   },
   "author": "Marco Chiu",
